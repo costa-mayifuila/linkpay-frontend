@@ -160,8 +160,32 @@ export default function MeusLinks() {
                   Status: <span className={`font-medium ${corStatus[link.status]}`}>{link.status}</span>
                 </p>
                 <p className="text-sm text-gray-600 mb-1">Comissão: {link.comissaoPercentual || 0}%</p>
-                <p className="text-sm text-gray-600 mb-1">Recebido líquido: <strong>Kz {parseFloat(link.recebidoLiquido || 0).toLocaleString()}</strong></p>
-                <p className="text-xs text-gray-500">📅 Criado em: {new Date(link.createdAt).toLocaleString()}</p>
+                <p className="text-sm text-gray-600 mb-1">
+                  Recebido líquido:{" "}
+                  <strong>Kz {parseFloat(link.recebidoLiquido || 0).toLocaleString()}</strong>
+                </p>
+
+                {/* ✅ Dados do cliente, se pago */}
+                {link.status === "pago" && (
+                  <div className="mt-2 text-sm text-gray-700 space-y-1">
+                    <p>🙍‍♂️ <strong>Cliente:</strong> {link.nomeCliente || "—"}</p>
+                    <p>📧 <strong>Email:</strong> {link.emailCliente || "—"}</p>
+                    <p>📱 <strong>WhatsApp:</strong>{" "}
+                      {link.whatsappCliente ? (
+                        <a
+                          href={`https://wa.me/244${link.whatsappCliente}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 underline"
+                        >
+                          Falar com o cliente
+                        </a>
+                      ) : "—"}
+                    </p>
+                  </div>
+                )}
+
+                <p className="text-xs text-gray-500 mt-1">📅 Criado em: {new Date(link.createdAt).toLocaleString()}</p>
 
                 <div className="mt-4">
                   <p className="text-sm text-gray-700">🔗 Link:</p>

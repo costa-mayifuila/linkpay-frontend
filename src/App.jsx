@@ -17,6 +17,7 @@ import AfiliadoLandingPage from "./pages/AfiliadoLandingPage.jsx";
 import OfertasPage from "./pages/OfertasPage.jsx";
 import SolucoesPage from "./pages/SolucoesPage.jsx";
 import EmpresaPage from "./pages/EmpresaPage.jsx";
+import PublicPaymentPage from "./components/PublicPaymentPage"; // ou src/pages/PublicPaymentPage se estiver lá
 
 // 📦 Páginas protegidas (usuário comum)
 import MeusLinks from "./pages/MeusLinks.jsx";
@@ -55,7 +56,8 @@ export default function App() {
           <Route path="/planos" element={<OfertasPage />} />
           <Route path="/solucoes" element={<SolucoesPage />} />
           <Route path="/empresa" element={<EmpresaPage />} />
-
+          <Route path="/pagar/:slug" element={<PublicPaymentPage />} />
+ 
           {/* 🔐 Usuário logado */}
           <Route path="/painel" element={<ProtectedRoute><MeusLinks /></ProtectedRoute>} />
           <Route path="/minha-assinatura" element={<ProtectedRoute><MinhaAssinatura /></ProtectedRoute>} />

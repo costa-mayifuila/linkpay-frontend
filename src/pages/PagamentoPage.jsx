@@ -7,6 +7,9 @@ export default function PagamentoPage() {
   const [link, setLink] = useState(null);
   const [loading, setLoading] = useState(true);
   const [afiliadoId, setAfiliadoId] = useState(null);
+  const [nomeCliente, setNomeCliente] = useState("");
+  const [emailCliente, setEmailCliente] = useState("");
+  const [whatsappCliente, setWhatsappCliente] = useState("");
 
   const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -30,10 +33,18 @@ export default function PagamentoPage() {
   }, [slug, BASE_URL]);
 
   const iniciarPagamento = async () => {
+    if (!nomeCliente || !emailCliente || !whatsappCliente) {
+      alert("Preencha todos os campos antes de continuar.");
+      return;
+    }
+
     try {
       const payload = {
         reference: link.slug || slug,
         amount: link.amount,
+        nomeCliente,
+        emailCliente,
+        whatsappCliente,
       };
 
       if (afiliadoId) {
@@ -74,6 +85,34 @@ export default function PagamentoPage() {
         <p className="text-lg text-green-600 font-semibold mb-4">
           💰 Valor: Kz {parseFloat(link.amount).toLocaleString()}
         </p>
+
+        {/* Campos do cliente */}
+        <input
+          type="text"
+          placeholder="Seu nome completo"
+          value={nomeCliente}
+          onChange={(e) => setNomeCliente(e.target.value)}
+          className="w-full mb-3 p-2 border rounded"
+          required
+        />
+
+        <input
+          type="email"
+          placeholder="Seu e-mail"
+          value={emailCliente}
+          onChange={(e) => setEmailCliente(e.target.value)}
+          className="w-full mb-3 p-2 border rounded"
+          required
+        />
+
+        <input
+          type="tel"
+          placeholder="WhatsApp (com indicativo)"
+          value={whatsappCliente}
+          onChange={(e) => setWhatsappCliente(e.target.value)}
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
 
         <button
           onClick={iniciarPagamento}

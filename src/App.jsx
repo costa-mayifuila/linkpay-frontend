@@ -7,7 +7,8 @@ import Header from "./components/Header.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 // 📦 Páginas públicas
-import PagamentoPage from "./pages/PagamentoPage.jsx";
+
+
 import PagamentoConfirmado from "./pages/PagamentoConfirmado.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
@@ -47,7 +48,6 @@ export default function App() {
         <Routes>
           {/* 🌐 Públicas */}
           <Route path="/" element={<Home />} />
-          <Route path="/pagar/:slug" element={<PagamentoPage />} />
           <Route path="/pagamento-confirmado/:slug" element={<PagamentoConfirmado />} />
           <Route path="/afiliado/:slug" element={<PaginaAfiliado />} />
           <Route path="/register" element={<Register />} />

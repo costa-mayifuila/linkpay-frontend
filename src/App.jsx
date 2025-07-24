@@ -6,8 +6,6 @@ import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicPaymentPage from "./components/PublicPaymentPage";
-import LoadingSpinner from "./components/LoadingSpinner";
-import Unauthorized from "./pages/Unauthorized";
 
 // 🏠 Public Pages
 import Home from "./pages/Home";
@@ -57,7 +55,6 @@ export default function App() {
             <Route path="/afiliado/:slug" element={<PaginaAfiliado />} />
             <Route path="/afiliado-page/:idAfiliado" element={<AfiliadoLandingPage />} />
             <Route path="/pagamento-confirmado/:slug" element={<PagamentoConfirmado />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* 🔐 Authenticated User Routes */}
             <Route element={<ProtectedRoute />}>
@@ -71,24 +68,20 @@ export default function App() {
             </Route>
 
             {/* 🛡️ Admin Routes */}
-            <Route element={<ProtectedRoute requiredRole="admin" />}>
+            <Route element={<ProtectedRoute roles={["admin"]} />}>
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/saques" element={<AdminSaques />} />
             </Route>
 
             {/* 🤝 Affiliate Routes */}
-            <Route element={<ProtectedRoute requiredRole="afiliado" />}>
+            <Route element={<ProtectedRoute roles={["afiliado"]} />}>
               <Route path="/afiliado/painel" element={<AfiliadoPainel />} />
               <Route path="/afiliado/dashboard" element={<AfiliadoDashboard />} />
               <Route path="/afiliado/saques" element={<AfiliadoSaquePage />} />
             </Route>
 
-            {/* 🚫 404 Page */}
-            <Route path="*" element={
-              <div className="flex items-center justify-center h-screen">
-                <h1 className="text-4xl font-bold">404 - Página não encontrada</h1>
-              </div>
-            } />
+            {/* 🚫 404 Page - Uncomment if you have one */}
+            {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
         </main>
       </div>

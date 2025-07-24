@@ -27,7 +27,8 @@ export default function Register() {
       const res = await axios.post(`${BASE_URL}/api/auth/register`, formData);
 
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("userInfo", JSON.stringify(res.data.user));
+
 
       navigate("/painel");
     } catch (err) {

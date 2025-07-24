@@ -6,11 +6,12 @@ export default function CriarLink({ onLinkCriado }) {
   const [amount, setAmount] = useState("");
   const [liquido, setLiquido] = useState(null);
   const [linkCriado, setLinkCriado] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("userInfo"));
   const BASE_URL = import.meta.env.VITE_API_URL;
-  const BASE_SITE = "https://linkpay-frontend.vercel.app"; // sem barra no final!
+  const BASE_SITE = "https://linkpay-frontend.vercel.app"; // No trailing slash
 
   const calcularLiquido = (plano, valor) => {
     let p = 0.04;
@@ -37,6 +38,8 @@ export default function CriarLink({ onLinkCriado }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    
     try {
       const res = await axios.post(
         `${BASE_URL}/api/links/criar`,
@@ -49,18 +52,28 @@ export default function CriarLink({ onLinkCriado }) {
       );
 
       const link = res.data.link;
+      
+      // Generate clean URL for BrowserRouter
+      setLinkCriado(`${BASE_SITE}/pagar/${link.slug}`);
+      
+      // Copy to clipboard automatically
+      navigator.clipboard.writeText(`${BASE_SITE}/pagar/${link.slug}`)
+        .then(() => {
+          alert("✅ Link criado e copiado para a área de transferência!");
+        })
+        .catch(() => {
+          alert("✅ Link criado com sucesso!");
+        });
 
-      // ✅ Aqui adicionamos o #/ para funcionar com HashRouter
-      setLinkCriado(`${BASE_SITE}/#/pagar/${link.slug}`);
-
-      alert("✅ Link criado com sucesso!");
       setTitle("");
       setAmount("");
       setLiquido(null);
       if (onLinkCriado) onLinkCriado();
     } catch (err) {
       console.error("❌ Erro ao criar link:", err);
-      alert("Erro ao criar link.");
+      alert(err.response?.data?.message || "Erro ao criar link.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,23 +87,37 @@ export default function CriarLink({ onLinkCriado }) {
           Criar Novo Link de Pagamento
         </h2>
 
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Título do produto/serviço"
-          className="w-full border border-gray-300 px-4 py-3 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
+        <div className="mb-4">
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+            Título do produto/serviço
+          </label>
+          <input
+            id="title"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Ex: Consultoria de Marketing"
+            className="w-full border border-gray-300 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
 
-        <input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          placeholder="Valor (Kz)"
-          className="w-full border border-gray-300 px-4 py-3 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
+        <div className="mb-4">
+          <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-1">
+            Valor (Kz)
+          </label>
+          <input
+            id="amount"
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Ex: 50000"
+            min="1"
+            step="0.01"
+            className="w-full border border-gray-300 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
 
         {liquido && (
           <p className="text-sm text-green-700 bg-green-100 p-2 rounded-lg mb-4">
@@ -100,22 +127,32 @@ export default function CriarLink({ onLinkCriado }) {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium px-6 py-3 rounded-xl mb-2"
+          disabled={isLoading}
+          className={`w-full ${isLoading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} transition-colors text-white font-medium px-6 py-3 rounded-xl mb-2`}
         >
-          Criar Link
+          {isLoading ? 'Criando...' : 'Criar Link'}
         </button>
 
         {linkCriado && (
           <div className="mt-5 bg-gray-100 p-4 rounded-lg border border-gray-300">
             <p className="text-sm font-medium text-gray-700 mb-1">🔗 Link gerado:</p>
-            <a
-              href={linkCriado}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-700 underline break-all"
-            >
-              {linkCriado}
-            </a>
+            <div className="flex items-center gap-2">
+              <a
+                href={linkCriado}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-700 underline break-all flex-1"
+              >
+                {linkCriado}
+              </a>
+              <button
+                type="button"
+                onClick={() => navigator.clipboard.writeText(linkCriado)}
+                className="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
+              >
+                Copiar
+              </button>
+            </div>
           </div>
         )}
       </form>

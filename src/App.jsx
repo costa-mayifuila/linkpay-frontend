@@ -1,102 +1,90 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-// 📦 Componentes
-import Navbar from "./components/Navbar.jsx";
-import Header from "./components/Header.jsx";
-import ProtectedRoute from "./components/ProtectedRoute.jsx";
+// 🧩 Components
+import Navbar from "./components/Navbar";
+import Header from "./components/Header";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicPaymentPage from "./components/PublicPaymentPage";
 
-// 📦 Páginas públicas
+// 🏠 Public Pages
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import OfertasPage from "./pages/OfertasPage";
+import SolucoesPage from "./pages/SolucoesPage";
+import EmpresaPage from "./pages/EmpresaPage";
+import PaginaAfiliado from "./pages/PaginaAfiliado";
+import AfiliadoLandingPage from "./pages/AfiliadoLandingPage";
+import PagamentoConfirmado from "./pages/PagamentoConfirmado";
 
+// 👤 User Pages
+import Dashboard from "./pages/Dashboard";
+import MeusLinks from "./pages/MeusLinks";
+import MinhaAssinatura from "./pages/MinhaAssinatura";
+import SaquePage from "./pages/SaquePage";
+import PerfilPage from "./pages/PerfilPage";
+import ExtratoPage from "./pages/ExtratoPage";
+import SuportePage from "./pages/SuportePage";
 
-import PagamentoConfirmado from "./pages/PagamentoConfirmado.jsx";
-import Register from "./pages/Register.jsx";
-import Login from "./pages/Login.jsx";
-import Home from "./pages/Home.jsx";
-import PaginaAfiliado from "./pages/PaginaAfiliado.jsx";
-import AfiliadoLandingPage from "./pages/AfiliadoLandingPage.jsx";
-import OfertasPage from "./pages/OfertasPage.jsx";
-import SolucoesPage from "./pages/SolucoesPage.jsx";
-import EmpresaPage from "./pages/EmpresaPage.jsx";
-import PublicPaymentPage from "./components/PublicPaymentPage"; // ou src/pages/PublicPaymentPage se estiver lá
+// 👑 Admin Pages
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminSaques from "./pages/AdminSaques";
 
-// 📦 Páginas protegidas (usuário comum)
-import MeusLinks from "./pages/MeusLinks.jsx";
-import MinhaAssinatura from "./pages/MinhaAssinatura.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import SaquePage from "./pages/SaquePage.jsx";
-import PerfilPage from "./pages/PerfilPage.jsx";
-import ExtratoPage from "./pages/ExtratoPage.jsx";
-import SuportePage from "./pages/SuportePage.jsx";
-
-// 📦 Páginas protegidas (admin)
-import AdminSaques from "./pages/AdminSaques.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
-
-// 📦 Páginas protegidas (afiliado)
-import AfiliadoPainel from "./pages/AfiliadoPainel.jsx";
-import AfiliadoDashboard from "./pages/AfiliadoDashboard.jsx";
-import AfiliadoSaquePage from "./pages/AfiliadoSaquePage.jsx";
+// 🤝 Affiliate Pages
+import AfiliadoPainel from "./pages/AfiliadoPainel";
+import AfiliadoDashboard from "./pages/AfiliadoDashboard";
+import AfiliadoSaquePage from "./pages/AfiliadoSaquePage";
 
 export default function App() {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <Navbar />
+      <div className="flex flex-1">
+        <Navbar />
+        <main className="flex-1 p-6 bg-gray-50 md:ml-64">
+          <Routes>
+            {/* 🌐 Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/planos" element={<OfertasPage />} />
+            <Route path="/solucoes" element={<SolucoesPage />} />
+            <Route path="/empresa" element={<EmpresaPage />} />
+            <Route path="/pagar/:slug" element={<PublicPaymentPage />} />
+            <Route path="/afiliado/:slug" element={<PaginaAfiliado />} />
+            <Route path="/afiliado-page/:idAfiliado" element={<AfiliadoLandingPage />} />
+            <Route path="/pagamento-confirmado/:slug" element={<PagamentoConfirmado />} />
 
-      <main className="md:ml-64 min-h-screen bg-gray-50 p-4">
-        <Routes>
-          {/* 🌐 Públicas */}
-          <Route path="/" element={<Home />} />
-          <Route path="/pagamento-confirmado/:slug" element={<PagamentoConfirmado />} />
-          <Route path="/afiliado/:slug" element={<PaginaAfiliado />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/afiliado-page/:idAfiliado" element={<AfiliadoLandingPage />} />
-          <Route path="/planos" element={<OfertasPage />} />
-          <Route path="/solucoes" element={<SolucoesPage />} />
-          <Route path="/empresa" element={<EmpresaPage />} />
-          <Route path="/pagar/:slug" element={<PublicPaymentPage />} />
- 
-          {/* 🔐 Usuário logado */}
-          <Route path="/painel" element={<ProtectedRoute><MeusLinks /></ProtectedRoute>} />
-          <Route path="/minha-assinatura" element={<ProtectedRoute><MinhaAssinatura /></ProtectedRoute>} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/saques" element={<ProtectedRoute><SaquePage /></ProtectedRoute>} />
-          <Route path="/perfil" element={<ProtectedRoute><PerfilPage /></ProtectedRoute>} />
-          <Route path="/extrato" element={<ProtectedRoute><ExtratoPage /></ProtectedRoute>} />
-          <Route path="/suporte" element={<ProtectedRoute><SuportePage /></ProtectedRoute>} />
+            {/* 🔐 Authenticated User Routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/painel" element={<MeusLinks />} />
+              <Route path="/minha-assinatura" element={<MinhaAssinatura />} />
+              <Route path="/saques" element={<SaquePage />} />
+              <Route path="/perfil" element={<PerfilPage />} />
+              <Route path="/extrato" element={<ExtratoPage />} />
+              <Route path="/suporte" element={<SuportePage />} />
+            </Route>
 
-          {/* 🛡️ Admin */}
-          <Route path="/admin/saques" element={
-            <ProtectedRoute role="admin">
-              <AdminSaques />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/dashboard" element={
-            <ProtectedRoute role="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          } />
+            {/* 🛡️ Admin Routes */}
+            <Route element={<ProtectedRoute role="admin" />}>
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/saques" element={<AdminSaques />} />
+            </Route>
 
-          {/* 🎯 Afiliado */}
-          <Route path="/afiliado" element={
-            <ProtectedRoute role="afiliado">
-              <AfiliadoPainel />
-            </ProtectedRoute>
-          } />
-          <Route path="/afiliado/dashboard" element={
-            <ProtectedRoute role="afiliado">
-              <AfiliadoDashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/afiliado/saques" element={
-            <ProtectedRoute role="afiliado">
-              <AfiliadoSaquePage />
-            </ProtectedRoute>
-          } />
-        </Routes>
-      </main>
-    </>
+            {/* 🤝 Affiliate Routes */}
+            <Route element={<ProtectedRoute role="afiliado" />}>
+              <Route path="/afiliado/painel" element={<AfiliadoPainel />} />
+              <Route path="/afiliado/dashboard" element={<AfiliadoDashboard />} />
+              <Route path="/afiliado/saques" element={<AfiliadoSaquePage />} />
+            </Route>
+
+            {/* 🚫 404 Page - Uncomment if you have one */}
+            {/* <Route path="*" element={<NotFound />} /> */}
+          </Routes>
+        </main>
+      </div>
+    </div>
   );
 }

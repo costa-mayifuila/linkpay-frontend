@@ -14,7 +14,7 @@ export default function CriarLink({ onLinkCriado }) {
   const BASE_SITE = "https://linkpay-frontend.vercel.app"; // No trailing slash
 
   const calcularLiquido = (plano, valor) => {
-    let p = 0.04;
+    let p = 0.04; 
     if (plano === "ouro") p = 0.025;
     if (plano === "premium") p = 0.01;
     const taxaFixa = 0.5;

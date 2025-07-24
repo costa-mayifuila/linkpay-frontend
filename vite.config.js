@@ -1,12 +1,19 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  
-  // Build configuration
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@pages': path.resolve(__dirname, 'src/pages'),
+    },
+  },
+  base: '/',                // ESSENCIAL para BrowserRouter no Vercel
   build: {
-    outDir: 'dist',
+    outDir: 'dist',         // pasta de saída que o Vercel vai hospedar
     rollupOptions: {
       output: {
         assetFileNames: 'assets/[name]-[hash][extname]',
@@ -14,51 +21,23 @@ export default defineConfig({
         entryFileNames: 'assets/[name]-[hash].js',
       },
     },
-    chunkSizeWarningLimit: 1000, // in kB
+    chunkSizeWarningLimit: 1000,
   },
-
-  // Base public path
-  base: '/',
-  
-  // Development server configuration
+  // Não precisa de historyApiFallback aqui no config de produção:
   server: {
     port: 3000,
     strictPort: true,
     open: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000', // Your backend server
+        target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
       },
     },
-    historyApiFallback: true, // Critical for BrowserRouter
   },
-
-  // Preview configuration (for 'vite preview' command)
   preview: {
     port: 3000,
     strictPort: true,
-  },
-
-  // Resolve configuration
-  resolve: {
-    alias: {
-      '@': '/src', // Setup path aliases
-      '@components': '/src/components',
-      '@pages': '/src/pages',
-    },
-  },
-
-  // CSS configuration
-  css: {
-    modules: {
-      localsConvention: 'camelCaseOnly',
-    },
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@import "@/styles/variables.scss";`,
-      },
-    },
   },
 });

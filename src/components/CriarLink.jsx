@@ -10,7 +10,7 @@ export default function CriarLink({ onLinkCriado }) {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("userInfo"));
   const BASE_URL = import.meta.env.VITE_API_URL;
-  const BASE_SITE = "https://linkpay-frontend.vercel.app";
+  const BASE_SITE = "https://linkpay-frontend.vercel.app"; // sem barra no final!
 
   const calcularLiquido = (plano, valor) => {
     let p = 0.04;
@@ -49,7 +49,10 @@ export default function CriarLink({ onLinkCriado }) {
       );
 
       const link = res.data.link;
-      setLinkCriado(`${BASE_SITE}/pagar/${link.slug}`);
+
+      // ✅ Aqui adicionamos o #/ para funcionar com HashRouter
+      setLinkCriado(`${BASE_SITE}/#/pagar/${link.slug}`);
+
       alert("✅ Link criado com sucesso!");
       setTitle("");
       setAmount("");

@@ -1,32 +1,35 @@
 import { Navigate } from "react-router-dom";
 
-// Componente que protege rotas privadas
 const ProtectedRoute = ({ children, role }) => {
+  let raw;
   let user = null;
 
   try {
-    // aqui mudamos para usar a chave "userInfo" que você salvou no login
-    const raw = localStorage.getItem("userInfo");
-
-    // Garante que o conteúdo seja válido antes de parsear
+    raw = localStorage.getItem("userInfo");
+    console.log("🔍 ProtectedRoute raw userInfo:", raw);
     if (raw && raw !== "undefined") {
       user = JSON.parse(raw);
+      console.log("✅ ProtectedRoute parsed user:", user);
     }
   } catch (error) {
-    console.error("❌ Erro ao acessar o usuário do localStorage:", error);
+    console.error("❌ Erro ao parsear userInfo:", error);
   }
 
-  // Redireciona se não estiver autenticado
+  // Se não tiver usuário, vai pro login
   if (!user) {
+    console.warn("🔒 ProtectedRoute: sem user, redirecionando para /login");
     return <Navigate to="/login" replace />;
   }
 
-  // Se houver uma role exigida e ela não bater, vai para home
+  // Se a rota exigir role e não bater
   if (role && user.role !== role) {
+    console.warn(
+      `🔒 ProtectedRoute: role mismatch (esperada ${role}, encontrada ${user.role}), redirecionando para /`
+    );
     return <Navigate to="/" replace />;
   }
 
-  // Autorizado: renderiza o conteúdo protegido
+  console.log("🔓 ProtectedRoute: autorizado, renderizando children");
   return children;
 };
 

@@ -10,11 +10,11 @@ export default function CriarLink({ onLinkCriado }) {
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("userInfo"));
-  const BASE_URL = import.meta.env.VITE_API_URL;
-  const BASE_SITE = "https://linkpay-frontend.vercel.app"; // No trailing slash
+  const BASE_URL  = import.meta.env.VITE_API_URL;
+  const BASE_SITE = import.meta.env.VITE_BASE_SITE; // agora vem do painel do Vercel
 
   const calcularLiquido = (plano, valor) => {
-    let p = 0.04; 
+    let p = 0.04;
     if (plano === "ouro") p = 0.025;
     if (plano === "premium") p = 0.01;
     const taxaFixa = 0.5;
@@ -39,31 +39,20 @@ export default function CriarLink({ onLinkCriado }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       const res = await axios.post(
         `${BASE_URL}/api/links/criar`,
         { title, amount: parseFloat(amount) },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const link = res.data.link;
-      
-      // Generate clean URL for BrowserRouter
-      setLinkCriado(`${BASE_SITE}/pagar/${link.slug}`);
-      
-      // Copy to clipboard automatically
-      navigator.clipboard.writeText(`${BASE_SITE}/pagar/${link.slug}`)
-        .then(() => {
-          alert("✅ Link criado e copiado para a área de transferência!");
-        })
-        .catch(() => {
-          alert("✅ Link criado com sucesso!");
-        });
+      const url  = `${BASE_SITE}/pagar/${link.slug}`;
+
+      setLinkCriado(url);
+      await navigator.clipboard.writeText(url);
+      alert("✅ Link criado e copiado para a área de transferência!");
 
       setTitle("");
       setAmount("");
@@ -128,9 +117,11 @@ export default function CriarLink({ onLinkCriado }) {
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full ${isLoading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} transition-colors text-white font-medium px-6 py-3 rounded-xl mb-2`}
+          className={`w-full ${
+            isLoading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+          } transition-colors text-white font-medium px-6 py-3 rounded-xl mb-2`}
         >
-          {isLoading ? 'Criando...' : 'Criar Link'}
+          {isLoading ? "Criando..." : "Criar Link"}
         </button>
 
         {linkCriado && (

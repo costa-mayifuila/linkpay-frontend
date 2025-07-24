@@ -5,7 +5,8 @@ const ProtectedRoute = ({ children, role }) => {
   let user = null;
 
   try {
-    const raw = localStorage.getItem("user");
+    // aqui mudamos para usar a chave "userInfo" que você salvou no login
+    const raw = localStorage.getItem("userInfo");
 
     // Garante que o conteúdo seja válido antes de parsear
     if (raw && raw !== "undefined") {
@@ -20,12 +21,12 @@ const ProtectedRoute = ({ children, role }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // Redireciona se a role for exigida e não coincidir
-  if (role && user?.role !== role) {
+  // Se houver uma role exigida e ela não bater, vai para home
+  if (role && user.role !== role) {
     return <Navigate to="/" replace />;
   }
 
-  // Autorizado
+  // Autorizado: renderiza o conteúdo protegido
   return children;
 };
 
